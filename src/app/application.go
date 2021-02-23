@@ -10,7 +10,9 @@ import (
     "bitmyth.com/accounts/src/user/controllers/logout"
     "bitmyth.com/accounts/src/user/controllers/profile"
     "bitmyth.com/accounts/src/user/controllers/register"
+    "github.com/gin-contrib/cors"
     "github.com/gin-gonic/gin"
+    "github.com/spf13/viper"
     "net/http"
     "time"
 )
@@ -51,7 +53,14 @@ func Bootstrap() error {
 func RegisterRoutes() {
 
     router := gin.Default()
-    //router.Use(middlewares.Auth())
+
+    // https://github.com/gin-contrib/cors
+    corsConfig := cors.DefaultConfig()
+    //config.AllowOrigins = []string{"http://google.com"}
+    corsConfig.AllowAllOrigins = true
+    corsConfig.AllowHeaders= append(corsConfig.AllowHeaders, "Authorization")
+
+    router.Use(cors.New(corsConfig))
 
     router.GET("/", func(c *gin.Context) {
         time.Sleep(5 * time.Second)
@@ -62,14 +71,14 @@ func RegisterRoutes() {
     routes.RegisterRoutes(router, login.Routes())
     routes.RegisterRoutes(router, logout.Routes())
 
-
-    protected:=router.Group("/")
+    protected := router.Group("/")
     protected.Use(middlewares.Auth())
 
     routes.RegisterRoutes(protected, profile.Routes())
 
+    port := viper.GetString("server.port")
     Container.Server = &http.Server{
-        Addr:    ":8080",
+        Addr: ":" + port,
         Handler: router,
     }
 }

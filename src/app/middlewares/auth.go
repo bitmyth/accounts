@@ -17,7 +17,7 @@ func Auth() gin.HandlerFunc {
         t, err := token.JWT().ValidateHeader(authHeader)
 
         if err != nil {
-            c.AbortWithStatusJSON(http.StatusUnauthorized, responses.Error{Code: "unauthorized", Message: err.Error()})
+            c.AbortWithStatusJSON(http.StatusUnauthorized, responses.AuthError{Code: "unauthorized", Message: err.Error()})
         }
 
         claims := t.Claims.(*token.AuthCustomClaims)
@@ -26,7 +26,7 @@ func Auth() gin.HandlerFunc {
         var u user.User
         err = userrepo.Get().First(&u, user.User{ID: userID})
         if err != nil {
-            c.AbortWithStatusJSON(http.StatusUnauthorized, responses.Error{Code: "UserNotFound", Message: err.Error()})
+            c.AbortWithStatusJSON(http.StatusUnauthorized, responses.AuthError{Code: "UserNotFound", Message: err.Error()})
         }
 
         c.Set("user", u)

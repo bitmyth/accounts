@@ -4,7 +4,6 @@ import (
     "bitmyth.com/accounts/src/app/responses"
     "fmt"
     "github.com/gin-gonic/gin"
-    "net/http"
 )
 
 type Route struct {
@@ -34,12 +33,12 @@ func RegisterRoutes(router gin.IRouter, routes []Route) {
             response := route.Handler(c)
 
             switch response.Type {
-            case responses.STRING:
-                c.String(http.StatusOK, fmt.Sprintf("%v", response.Content))
+            case responses.TEXT:
+                c.String(response.HttpStatusCode, fmt.Sprintf("%v", response.Content))
             case responses.JSON:
-                c.JSON(http.StatusOK, response.Content)
+                c.JSON(response.HttpStatusCode, response.Content)
             default:
-                c.JSON(http.StatusOK, response.Content)
+                c.JSON(response.HttpStatusCode, response.Content)
             }
         }
 

@@ -1,6 +1,7 @@
 package register
 
 import (
+    "bitmyth.com/accounts/src/app/auth/token"
     "bitmyth.com/accounts/src/app/responses"
     "bitmyth.com/accounts/src/app/routes"
     "bitmyth.com/accounts/src/hash"
@@ -10,27 +11,60 @@ import (
 )
 
 func Register(context *gin.Context) *responses.Response {
-    name := context.PostForm("name")
+    //name := context.PostForm("name")
+    //password := context.PostForm("password")
 
-    password := context.PostForm("password")
-    hashed, err := hash.Make([]byte(password))
+    type RegisterForm struct {
+        user.User
+        PasswordConfirm string `form:"passwordConfirm"`
+    }
+    var req RegisterForm
+    _ = context.BindJSON(&req)
+
+    userRepo := userrepo.Get()
+
+    condition := &user.User{
+        Name: req.Name,
+    }
+
+    var found user.User
+    err := userRepo.First(&found, condition)
+
+    // Found existing user with the same name
+    if err == nil {
+        return responses.Json(responses.ValidationError{
+            Code:    "invalid-name",
+            Message: "Invalid name",
+            Errors:  map[string]string{"name": "name exists"},
+        })
+    }
+
+    if req.Password != req.PasswordConfirm {
+        return responses.Json(responses.ValidationError{
+            Message: "Wrong password confirmation",
+            Errors:  map[string]string{"passwordConfirm": "wrong password confirmation"},
+        })
+    }
+
+    hashed, err := hash.Make([]byte(req.User.Password))
     if err != nil {
         return responses.Json("failed hashing password")
     }
 
-    user := &user.User{
-        Name:     name,
+    u := &user.User{
+        Name:     req.Name,
         Password: string(hashed),
     }
 
-    userRepo := userrepo.Get()
-    err = userRepo.Save(user)
+    err = userRepo.Save(u)
 
     if err != nil {
         return responses.Json(err)
     }
 
-    return responses.Json(user)
+    jwt := token.JWT().GenerateToken(u.ID, true)
+
+    return responses.Json(gin.H{"token": jwt, "user": u.Filter()})
 }
 
 func Routes() []routes.Route {

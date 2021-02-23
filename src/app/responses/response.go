@@ -1,22 +1,53 @@
 package responses
 
-const STRING = "string"
+import "net/http"
+
+const TEXT = "text"
 const JSON = "json"
 
 type Response struct {
-    Content interface{}
-    Type    string
+    HttpStatusCode int
+    Type           string
+    Content        interface{}
 }
 
 func Json(data interface{}) *Response {
-    return &Response{
-        Type:    JSON,
-        Content: data,
+    switch data.(type) {
+    case AuthError:
+        return &Response{
+            HttpStatusCode: http.StatusUnauthorized,
+            Type:           JSON,
+            Content:        data,
+        }
+
+    case ValidationError:
+        return &Response{
+            HttpStatusCode: http.StatusUnprocessableEntity,
+            Type:           JSON,
+            Content:        data,
+        }
+
+    default:
+        return &Response{
+            HttpStatusCode: http.StatusOK,
+            Type:           JSON,
+            Content:        data,
+        }
     }
 }
 
+type ValidationError struct {
+    Code    string            `json:"code"`
+    Message string            `json:"message"`
+    Errors  map[string]string `json:"errors"`
+}
+
+type AuthError struct {
+    Code    string `json:"code"`
+    Message string `json:"message"`
+}
+
 type Error struct {
-    Code    string
-    Message string
-    //Link    string
+    Code    string `json:"code"`
+    Message string `json:"message"`
 }

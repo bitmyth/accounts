@@ -11,37 +11,37 @@ import (
 
 func Login(context *gin.Context) *responses.Response {
     var u user.User
+    var found user.User
     var credential user.Credential
 
     userRepo := userrepo.Get()
 
-    name := context.PostForm("name")
-    phone := context.PostForm("phone")
+    _ = context.BindJSON(&u)
 
-    credential.Password = context.PostForm("password")
+    credential.Name = u.Name
+    credential.Password = u.Password
 
-    for _, username := range []string{name, phone} {
-        if username != "" {
-            credential.Name = username
-            break
-        }
-    }
+    condition := u.Filter()
 
-    condition := &user.User{
-        Name: name,
-    }
-
-    err := userRepo.First(&u, condition)
+    err := userRepo.First(&found, condition)
     if err != nil {
-        return responses.Json("user not found")
+        return responses.Json(responses.ValidationError{
+            Code:    "invalid-credential",
+            Message: "Invalid credential",
+            Errors:  map[string]string{"name": "User Not Found"},
+        })
     }
 
-    if err := u.Authenticate(&credential); err != nil {
+    if err := found.Authenticate(&credential); err != nil {
+        return responses.Json(responses.ValidationError{
+            Message: "Wrong password",
+            Errors:  map[string]string{"password": "wrong password"},
+        })
         return responses.Json("wrong password")
     }
 
     jwt := token.JWT().GenerateToken(u.ID, true)
-    return responses.Json(jwt)
+    return responses.Json(gin.H{"token": jwt, "user": u})
 }
 
 func Routes() []routes.Route {
