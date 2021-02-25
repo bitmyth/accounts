@@ -1,10 +1,10 @@
 package profile
 
 import (
-    "bitmyth.com/accounts/src/app/responses"
-    "bitmyth.com/accounts/src/app/routes"
-    "bitmyth.com/accounts/src/user"
-    "bitmyth.com/accounts/src/user/userrepo"
+    "github.com/bitmyth/accounts/src/app/responses"
+    "github.com/bitmyth/accounts/src/app/routes"
+    "github.com/bitmyth/accounts/src/user"
+    "github.com/bitmyth/accounts/src/user/userrepo"
     "fmt"
     "github.com/gin-gonic/gin"
 )

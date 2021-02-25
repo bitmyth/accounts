@@ -1,7 +1,7 @@
 package routes
 
 import (
-    "bitmyth.com/accounts/src/app/responses"
+    "github.com/bitmyth/accounts/src/app/responses"
     "fmt"
     "github.com/gin-gonic/gin"
 )

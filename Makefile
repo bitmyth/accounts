@@ -1,7 +1,15 @@
+BIND_DIR := "dist"
+IMAGE := "bitmyth/accounts"
+
 ## Create the "dist" directory
 dist:
 	mkdir dist
 
-build:
-    rm -f dist/traefik
-    CGO_ENABLED=0 GOGC=off  go build -a -installsuffix nocgo -o dist/accounts ./src/
+## Build the linux binary
+binary:
+	./script/make.sh
+
+## Clean up static directory and build a Docker Traefik image
+build-image: binary
+	rm -rf static
+	docker build -t $(IMAGE) .

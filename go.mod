@@ -1,4 +1,4 @@
-module bitmyth.com/accounts
+module github.com/bitmyth/accounts
 
 go 1.15
 

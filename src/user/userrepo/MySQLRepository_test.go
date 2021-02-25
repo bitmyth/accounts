@@ -1,9 +1,9 @@
 package userrepo
 
 import (
-    "bitmyth.com/accounts/src/app"
-    "bitmyth.com/accounts/src/hash"
-    "bitmyth.com/accounts/src/user"
+    "github.com/bitmyth/accounts/src/app"
+    "github.com/bitmyth/accounts/src/hash"
+    "github.com/bitmyth/accounts/src/user"
     "testing"
 )
 

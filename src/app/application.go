@@ -1,15 +1,16 @@
 package app
 
 import (
-    "bitmyth.com/accounts/src/app/boot"
-    "bitmyth.com/accounts/src/app/middlewares"
-    "bitmyth.com/accounts/src/app/routes"
-    "bitmyth.com/accounts/src/config"
-    "bitmyth.com/accounts/src/database/mysql"
-    "bitmyth.com/accounts/src/user/controllers/login"
-    "bitmyth.com/accounts/src/user/controllers/logout"
-    "bitmyth.com/accounts/src/user/controllers/profile"
-    "bitmyth.com/accounts/src/user/controllers/register"
+    "github.com/bitmyth/accounts/src/app/boot"
+    "github.com/bitmyth/accounts/src/app/middlewares"
+    "github.com/bitmyth/accounts/src/app/routes"
+    "github.com/bitmyth/accounts/src/app/version"
+    "github.com/bitmyth/accounts/src/config"
+    "github.com/bitmyth/accounts/src/database/mysql"
+    "github.com/bitmyth/accounts/src/user/controllers/login"
+    "github.com/bitmyth/accounts/src/user/controllers/logout"
+    "github.com/bitmyth/accounts/src/user/controllers/profile"
+    "github.com/bitmyth/accounts/src/user/controllers/register"
     "github.com/gin-contrib/cors"
     "github.com/gin-gonic/gin"
     "github.com/spf13/viper"
@@ -39,6 +40,7 @@ func New() *App {
 
 func Bootstrap() error {
     config.Read()
+    gin.SetMode(gin.ReleaseMode)
 
     for _, b := range Container.Bootstraps {
         err := b()
@@ -75,6 +77,9 @@ func RegisterRoutes() {
     protected.Use(middlewares.Auth())
 
     routes.RegisterRoutes(protected, profile.Routes())
+
+    version.Info{}.Append(router)
+    //_ = version.Print(os.Stdout)
 
     port := viper.GetString("server.port")
     Container.Server = &http.Server{

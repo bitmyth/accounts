@@ -1,9 +1,10 @@
 package main
 
 import (
-    "bitmyth.com/accounts/src/app"
-    "bitmyth.com/accounts/src/user/userrepo"
     "context"
+    "fmt"
+    "github.com/bitmyth/accounts/src/app"
+    "github.com/bitmyth/accounts/src/user/userrepo"
     "log"
     "net/http"
     "os"
@@ -23,9 +24,9 @@ func main() {
 
     srv := app.Container.Server
 
-
     go func() {
         // service connections
+        _, _ = os.Stdout.Write([]byte(fmt.Sprintf("Server listen on port %s\n", srv.Addr)))
         if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
             log.Fatalf("listen: %s\n", err)
         }

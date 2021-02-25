@@ -1,12 +1,12 @@
 package register
 
 import (
-    "bitmyth.com/accounts/src/app/auth/token"
-    "bitmyth.com/accounts/src/app/responses"
-    "bitmyth.com/accounts/src/app/routes"
-    "bitmyth.com/accounts/src/hash"
-    "bitmyth.com/accounts/src/user"
-    "bitmyth.com/accounts/src/user/userrepo"
+    "github.com/bitmyth/accounts/src/app/auth/token"
+    "github.com/bitmyth/accounts/src/app/responses"
+    "github.com/bitmyth/accounts/src/app/routes"
+    "github.com/bitmyth/accounts/src/hash"
+    "github.com/bitmyth/accounts/src/user"
+    "github.com/bitmyth/accounts/src/user/userrepo"
     "github.com/gin-gonic/gin"
 )
 

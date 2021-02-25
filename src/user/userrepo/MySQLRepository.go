@@ -1,8 +1,8 @@
 package userrepo
 
 import (
-    "bitmyth.com/accounts/src/database/mysql"
-    "bitmyth.com/accounts/src/user"
+    "github.com/bitmyth/accounts/src/database/mysql"
+    "github.com/bitmyth/accounts/src/user"
     "gorm.io/gorm"
 )
 

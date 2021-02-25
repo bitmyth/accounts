@@ -1,7 +1,7 @@
 package user
 
 import (
-    "bitmyth.com/accounts/src/hash"
+    "github.com/bitmyth/accounts/src/hash"
     "gorm.io/gorm"
 )
 
