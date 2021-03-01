@@ -1,19 +1,22 @@
-package userrepo
+package user
 
 import (
-    "github.com/bitmyth/accounts/src/app"
+    "github.com/bitmyth/accounts/src/config"
+    "github.com/bitmyth/accounts/src/database/mysql"
     "github.com/bitmyth/accounts/src/hash"
-    "github.com/bitmyth/accounts/src/user"
     "testing"
 )
 
-var userRepo *UserRepository
+var userRepo *Repository
 var fakeName string
 
 func TestMain(m *testing.M) {
-    _ = app.Bootstrap()
+    println(config.RootPath)
+    _ = config.Bootstrap()
+    _ = mysql.Bootstrap()
+    _ = Repo.Bootstrap()
 
-    userRepo = Get()
+    userRepo = Repo
 
     fakeName = "sam"
 
@@ -23,11 +26,9 @@ func TestMain(m *testing.M) {
 func TestSave(t *testing.T) {
     password, err := hash.Make([]byte("123"))
 
-    u := &user.User{
-        Credential: user.Credential{
-            Name:     fakeName,
-            Password: string(password),
-        },
+    u := &User{
+        Name:     fakeName,
+        Password: string(password),
     }
 
     err = userRepo.Save(u)
@@ -39,27 +40,27 @@ func TestSave(t *testing.T) {
 }
 
 func TestFind(t *testing.T) {
-    var u []user.User
+    var u []User
 
-    err := userRepo.Find(&u, &user.User{Credential: user.Credential{Name: fakeName}})
+    err := userRepo.Find(&u, &User{Name: fakeName})
     if err != nil {
         err.Error()
         t.Fatalf("failed find %v", err)
     }
 
-    t.Logf("find: %v", u[0].Credential)
+    t.Logf("find: %v", u[0])
 }
 
 func TestUpdate(t *testing.T) {
-    var u user.User
+    var u User
 
-    err := userRepo.First(&u, &user.User{Credential: user.Credential{Name: fakeName}})
+    err := userRepo.First(&u, &User{Name: fakeName})
     if err != nil {
         t.Fatalf("find failed%v", err)
     }
     t.Logf("find user: %v", u)
 
-    u.Credential.Name = "foo"
+    u.Name = "foo"
     err = userRepo.Save(&u)
     if err != nil {
         t.Fatalf("update failed %v", err)
@@ -67,4 +68,3 @@ func TestUpdate(t *testing.T) {
 
     t.Logf("updated user: %v", u)
 }
-

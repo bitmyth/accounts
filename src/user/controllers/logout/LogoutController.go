@@ -4,14 +4,13 @@ import (
     "github.com/bitmyth/accounts/src/app/responses"
     "github.com/bitmyth/accounts/src/app/routes"
     "github.com/bitmyth/accounts/src/user"
-    "github.com/bitmyth/accounts/src/user/userrepo"
     "github.com/gin-gonic/gin"
 )
 
 func Logout(context *gin.Context) *responses.Response {
     var u user.User
 
-    userRepo := userrepo.Get()
+    userRepo := user.Repo
 
     condition := &user.User{
     }

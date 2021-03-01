@@ -4,7 +4,6 @@ import (
     "github.com/bitmyth/accounts/src/app/auth/token"
     "github.com/bitmyth/accounts/src/app/responses"
     "github.com/bitmyth/accounts/src/user"
-    "github.com/bitmyth/accounts/src/user/userrepo"
     "github.com/gin-gonic/gin"
     "net/http"
 )
@@ -24,7 +23,7 @@ func Auth() gin.HandlerFunc {
         userID := claims.Uid
 
         var u user.User
-        err = userrepo.Get().First(&u, user.User{ID: userID})
+        err = user.Repo.First(&u, user.User{ID: userID})
         if err != nil {
             c.AbortWithStatusJSON(http.StatusUnauthorized, responses.AuthError{Code: "UserNotFound", Message: err.Error()})
         }

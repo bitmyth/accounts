@@ -1,11 +1,10 @@
 package profile
 
 import (
+    "fmt"
     "github.com/bitmyth/accounts/src/app/responses"
     "github.com/bitmyth/accounts/src/app/routes"
     "github.com/bitmyth/accounts/src/user"
-    "github.com/bitmyth/accounts/src/user/userrepo"
-    "fmt"
     "github.com/gin-gonic/gin"
 )
 
@@ -28,11 +27,11 @@ func Update(context *gin.Context) *responses.Response {
 
     var modifiedUser user.User
     err := context.Bind(&modifiedUser)
-    fmt.Printf("%v",err)
-    fmt.Printf("%v",modifiedUser)
+    fmt.Printf("%v", err)
+    fmt.Printf("%v", modifiedUser)
     u.Name = modifiedUser.Name
 
-    err = userrepo.Get().Save(u)
+    err = user.Repo.Save(u)
     if err != nil {
         return responses.Json(responses.Error{Code: "NotFound", Message: "user not found"})
     }

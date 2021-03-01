@@ -5,7 +5,6 @@ import (
     "github.com/bitmyth/accounts/src/app/responses"
     "github.com/bitmyth/accounts/src/app/routes"
     "github.com/bitmyth/accounts/src/user"
-    "github.com/bitmyth/accounts/src/user/userrepo"
     "github.com/gin-gonic/gin"
 )
 
@@ -14,7 +13,7 @@ func Login(context *gin.Context) *responses.Response {
     var found user.User
     var credential user.Credential
 
-    userRepo := userrepo.Get()
+    userRepo := user.Repo
 
     _ = context.BindJSON(&u)
 

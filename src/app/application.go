@@ -7,6 +7,7 @@ import (
     "github.com/bitmyth/accounts/src/app/version"
     "github.com/bitmyth/accounts/src/config"
     "github.com/bitmyth/accounts/src/database/mysql"
+    "github.com/bitmyth/accounts/src/user"
     "github.com/bitmyth/accounts/src/user/controllers/login"
     "github.com/bitmyth/accounts/src/user/controllers/logout"
     "github.com/bitmyth/accounts/src/user/controllers/profile"
@@ -23,7 +24,9 @@ type App struct {
     Bootstraps []boot.Bootstrap
 }
 
-var Container *App
+var (
+    Container *App
+)
 
 func init() {
     Container = New()
@@ -32,15 +35,15 @@ func init() {
 func New() *App {
     Container = &App{}
     Container.Bootstraps = []boot.Bootstrap{
+        config.Bootstrap,
         mysql.Bootstrap,
+        user.Repo.Bootstrap,
     }
 
     return Container
 }
 
 func Bootstrap() error {
-    config.Read()
-    gin.SetMode(gin.ReleaseMode)
 
     for _, b := range Container.Bootstraps {
         err := b()
@@ -60,7 +63,7 @@ func RegisterRoutes() {
     corsConfig := cors.DefaultConfig()
     //config.AllowOrigins = []string{"http://google.com"}
     corsConfig.AllowAllOrigins = true
-    corsConfig.AllowHeaders= append(corsConfig.AllowHeaders, "Authorization")
+    corsConfig.AllowHeaders = append(corsConfig.AllowHeaders, "Authorization")
 
     router.Use(cors.New(corsConfig))
 
@@ -83,7 +86,7 @@ func RegisterRoutes() {
 
     port := viper.GetString("server.port")
     Container.Server = &http.Server{
-        Addr: ":" + port,
+        Addr:    ":" + port,
         Handler: router,
     }
 }

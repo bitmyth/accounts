@@ -4,7 +4,7 @@ import (
     "context"
     "fmt"
     "github.com/bitmyth/accounts/src/app"
-    "github.com/bitmyth/accounts/src/user/userrepo"
+    "github.com/bitmyth/accounts/src/config"
     "log"
     "net/http"
     "os"
@@ -15,10 +15,12 @@ import (
 
 func main() {
     err := app.Bootstrap()
-    userrepo.Get()
+    println(config.RootPath)
+    //gin.SetMode(gin.ReleaseMode)
+    //userrepo.Get()
 
     if err != nil {
-        panic(err)
+        //panic(err)
     }
     app.RegisterRoutes()
 

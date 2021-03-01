@@ -6,7 +6,6 @@ import (
     "github.com/bitmyth/accounts/src/app/routes"
     "github.com/bitmyth/accounts/src/hash"
     "github.com/bitmyth/accounts/src/user"
-    "github.com/bitmyth/accounts/src/user/userrepo"
     "github.com/gin-gonic/gin"
 )
 
@@ -19,16 +18,19 @@ func Register(context *gin.Context) *responses.Response {
         PasswordConfirm string `form:"passwordConfirm"`
     }
     var req RegisterForm
-    _ = context.BindJSON(&req)
+    err := context.BindJSON(&req)
+    if err != nil {
+        return responses.Json(err.Error())
+    }
 
-    userRepo := userrepo.Get()
+    userRepo := user.Repo
 
     condition := &user.User{
         Name: req.Name,
     }
 
     var found user.User
-    err := userRepo.First(&found, condition)
+    err = userRepo.First(&found, condition)
 
     // Found existing user with the same name
     if err == nil {

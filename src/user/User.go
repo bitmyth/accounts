@@ -8,7 +8,7 @@ import (
 // https://gorm.io/docs/models.html#embedded_struct
 type User struct {
     ID       uint   `gorm:"primarykey"`
-    Name     string `gorm:"index;type:varchar(100)" form:"name"`
+    Name     string `gorm:"index;type:varchar(100)" form:"name" binding:"required"`
     Password string `gorm:"type:varchar(100)" form:"password"`
     Email    string `gorm:"index type:varchar(100)" form:"email"`
     Phone    string `gorm:"index" form:"phone"`
