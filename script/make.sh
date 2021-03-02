@@ -13,7 +13,7 @@ if [ -z "$DATE" ]; then
     DATE=$(date -u '+%Y-%m-%d_%I:%M:%S%p')
 fi
 
-GOOS=linux CGO_ENABLED=0 GOGC=off  go build -ldflags "\
+GOOS=linux CGO_ENABLED=0 GOGC=off  go build -v -ldflags "\
 -X github.com/bitmyth/accounts/src/app/version.Version=$VERSION \
 -X github.com/bitmyth/accounts/src/app/version.Codename=$CODENAME \
 -X github.com/bitmyth/accounts/src/app/version.BuildTime=$DATE " \
