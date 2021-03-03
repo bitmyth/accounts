@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  web:
+    image: accounts-frontend:v1.0.0
+    depends_on:
+      - accounts
+    ports:
+      - "8088:80"
+
+  accounts:
+    depends_on:
+      - mysql
+    image: accounts:v1.0.0
+    ports:
+      - "8081:80"
+    volumes:
+      - ./config:/config
+    restart: always
+
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - mysql:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+
+volumes:
+  mysql:
+    external: true
