@@ -1,11 +1,15 @@
 PWD := $(shell pwd)
 BIND_DIR := dist
-IMAGE := "bitmyth/accounts"
-DEV_IMAGE := accounts-build$(if $(GIT_BRANCH),:$(subst /,-,$(GIT_BRANCH)))
+IMAGE := bitmyth/accounts
+DEV_IMAGE := accounts:latest
 
 ## Create the "dist" directory
 dist:
 	mkdir $(BIND_DIR)
+
+## Build goose Docker image
+goose:
+	docker build -t goose -f Dockerfile.goose .
 
 dev-image: dist
 	docker build -t "$(DEV_IMAGE)" -f Dockerfile.build .
