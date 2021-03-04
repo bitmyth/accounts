@@ -27,15 +27,20 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DB}
 
+#  db-creation:
+#    image: mysql:5.7
+#    command: mysql -uroot -p$MYSQL_PASSWORD -hmysql -e "CREATE SCHEMA $MYSQL_DB DEFAULT CHARACTER SET utf8mb4"
+#    depends_on:
+#      - mysql
 
   db-migration:
     image: goose
+    depends_on:
+      - mysql
     working_dir: /migrations
     volumes:
       - ./src/database/migrations:/migrations
-    command: 'goose status'
-    depends_on:
-      - mysql
+    command: 'goose up'
     environment:
       GOOSE_DRIVER: mysql
       GOOSE_DBSTRING: root:${MYSQL_PASSWORD}@tcp(mysql)/${MYSQL_DB}
