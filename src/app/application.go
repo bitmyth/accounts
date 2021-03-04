@@ -48,6 +48,21 @@ func Bootstrap() error {
     for _, b := range Container.Bootstraps {
         err := b()
         if err != nil {
+
+            go func() {
+                i := 0
+                // Retry forever
+                for {
+                    time.Sleep(3 * time.Second)
+                    println(err.Error(), "retry", i)
+                    err = b()
+                    i++
+                    if err == nil {
+                        break
+                    }
+                }
+            }()
+
             return err
         }
     }
