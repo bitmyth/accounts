@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   web:
-    image: accounts-frontend:v1.0.0
+    image: accounts-frontend:${ACCOUNT_FRONTEND_TAG}
     depends_on:
       - accounts
     ports:
@@ -24,8 +24,21 @@ services:
       - mysql:/var/lib/mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB}
 
+
+  db-migration:
+    image: goose
+    working_dir: /migrations
+    volumes:
+      - ./src/database/migrations:/migrations
+    command: 'goose status'
+    depends_on:
+      - mysql
+    environment:
+      GOOSE_DRIVER: mysql
+      GOOSE_DBSTRING: root:${MYSQL_PASSWORD}@tcp(mysql)/${MYSQL_DB}
 volumes:
   mysql:
-    external: true
+  #external: true
