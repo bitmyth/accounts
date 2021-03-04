@@ -3,7 +3,6 @@ BIND_DIR := dist
 IMAGE := "bitmyth/accounts"
 DEV_IMAGE := accounts-build$(if $(GIT_BRANCH),:$(subst /,-,$(GIT_BRANCH)))
 
-
 ## Create the "dist" directory
 dist:
 	mkdir $(BIND_DIR)
@@ -19,8 +18,10 @@ binary: dev-image
 image: binary
 	docker build -t $(IMAGE) .
 
-
 ## Run Docker image for development
+serve-docker:
+	docker run --rm --net account-net --name accounts -v $(PWD)/config:/config -p 8081:8081 $(DEV_IMAGE) go run src/server/main.go
+
+## Run on local
 serve:
-	docker run --rm --net account-net --name accounts -v $(PWD)/config:/config -p 8081:8081 $(DEV_IMAGE) dist/accounts
-## Build Dev Docker image
+	go run src/server/main/server.go
