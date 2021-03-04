@@ -50,7 +50,7 @@ func Bootstrap() error {
         if err != nil {
 
             go func() {
-                i := 0
+                i := 1
                 // Retry forever
                 for {
                     time.Sleep(3 * time.Second)
