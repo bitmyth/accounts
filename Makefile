@@ -1,7 +1,7 @@
 PWD := $(shell pwd)
 BIND_DIR := dist
 IMAGE := bitmyth/accounts
-DEV_IMAGE := accounts:latest
+DEV_IMAGE := accounts:dev
 
 ## Create the "dist" directory
 dist:
@@ -23,9 +23,12 @@ image: binary
 	docker build -t $(IMAGE) .
 
 ## Run Docker image for development
-serve-docker:
+run-dev:
 	docker run --rm --net account-net --name accounts -v $(PWD)/config:/config -p 8081:8081 $(DEV_IMAGE) go run src/server/main.go
+## Run Docker image for development
+run-prod:
+	docker run --rm --net account-net --name accounts -v $(PWD)/config:/config -p 8081:8081 $(IMAGE) go run src/server/main.go
 
 ## Run on local
-serve:
-	go run src/server/main/server.go
+run:
+	go run src/server/main.go
