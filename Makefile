@@ -27,7 +27,7 @@ run-dev:
 	docker run --rm --net account-net --name accounts -v $(PWD)/config:/config -p 8081:8081 $(DEV_IMAGE) go run src/server/main.go
 ## Run Docker image for development
 run-prod:
-	docker run --rm --net account-net --name accounts -v $(PWD)/config:/config -p 8081:8081 $(IMAGE) go run src/server/main.go
+	docker run --rm --net account-net --name accounts -v $(PWD)/config:/config -p 8081:8081 $(IMAGE)
 
 ## Run on local
 run:
