@@ -22,7 +22,7 @@ func (ur *Repository) Init(db *gorm.DB) (*Repository, error) {
 }
 
 func (ur *Repository) Bootstrap() error {
-	db, err := mysql.DB()
+	db, err := mysql.Connect()
 	if err != nil {
 		return err
 	}

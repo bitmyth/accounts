@@ -7,7 +7,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var S *gorm.DB
+var DB *gorm.DB
 
 func Dsn() string {
 
@@ -22,21 +22,21 @@ func Dsn() string {
 	return dsn
 }
 
-func DB() (*gorm.DB, error) {
-	if S != nil {
-		return S, nil
+func Connect() (*gorm.DB, error) {
+	if DB != nil {
+		return DB, nil
 	}
 
 	if err := Bootstrap(); err != nil {
 		return nil, err
 	}
 
-	return S, nil
+	return DB, nil
 }
 
 func Bootstrap() error {
 
-	if S != nil {
+	if DB != nil {
 		return nil
 	}
 
@@ -50,7 +50,7 @@ func Bootstrap() error {
 		return err
 	}
 
-	S = db
+	DB = db
 
 	return nil
 }
