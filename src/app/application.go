@@ -1,107 +1,102 @@
 package app
 
 import (
-    "github.com/bitmyth/accounts/src/app/boot"
-    "github.com/bitmyth/accounts/src/app/middlewares"
-    "github.com/bitmyth/accounts/src/app/routes"
-    "github.com/bitmyth/accounts/src/app/version"
-    "github.com/bitmyth/accounts/src/config"
-    "github.com/bitmyth/accounts/src/database/mysql"
-    "github.com/bitmyth/accounts/src/user"
-    "github.com/bitmyth/accounts/src/user/controllers/login"
-    "github.com/bitmyth/accounts/src/user/controllers/logout"
-    "github.com/bitmyth/accounts/src/user/controllers/profile"
-    "github.com/bitmyth/accounts/src/user/controllers/register"
-    "github.com/gin-contrib/cors"
-    "github.com/gin-gonic/gin"
-    "github.com/spf13/viper"
-    "net/http"
-    "time"
+	"github.com/bitmyth/accounts/src/app/boot"
+	"github.com/bitmyth/accounts/src/app/middlewares"
+	"github.com/bitmyth/accounts/src/app/routes"
+	"github.com/bitmyth/accounts/src/app/version"
+	"github.com/bitmyth/accounts/src/config"
+	"github.com/bitmyth/accounts/src/database/mysql"
+	"github.com/bitmyth/accounts/src/user"
+	"github.com/bitmyth/accounts/src/user/controllers/login"
+	"github.com/bitmyth/accounts/src/user/controllers/logout"
+	"github.com/bitmyth/accounts/src/user/controllers/profile"
+	"github.com/bitmyth/accounts/src/user/controllers/register"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
+	"net/http"
+	"time"
 )
 
 type App struct {
-    Server     *http.Server
-    Bootstraps []boot.Bootstrap
+	Server     *http.Server
+	Bootstraps []boot.Bootstrap
 }
 
 var (
-    Container *App
+	Container *App
 )
 
 func init() {
-    Container = New()
+	Container = New()
 }
 
 func New() *App {
-    Container = &App{}
-    Container.Bootstraps = []boot.Bootstrap{
-        config.Bootstrap,
-        mysql.Bootstrap,
-        user.Repo.Bootstrap,
-    }
+	Container = &App{}
+	Container.Bootstraps = []boot.Bootstrap{
+		config.Bootstrap,
+		mysql.Bootstrap,
+		user.Repo.Bootstrap,
+	}
 
-    return Container
+	return Container
 }
 
 func Bootstrap() error {
 
-    for _, b := range Container.Bootstraps {
-        err := b()
-        if err != nil {
+	for _, b := range Container.Bootstraps {
+		err := b()
+		if err != nil {
 
-            go func() {
-                i := 1
-                // Retry forever
-                for {
-                    time.Sleep(3 * time.Second)
-                    println(err.Error(), "retry", i)
-                    err = b()
-                    i++
-                    if err == nil {
-                        break
-                    }
-                }
-            }()
+			i := 1
+			// Retry forever
+			for {
+				time.Sleep(3 * time.Second)
+				err = b()
+				i++
+				if err == nil {
+					break
+				}
+			}
+		}
+	}
 
-            return err
-        }
-    }
-
-    return nil
+	return nil
 }
 
 func RegisterRoutes() {
 
-    router := gin.Default()
+	router := gin.Default()
 
-    // https://github.com/gin-contrib/cors
-    corsConfig := cors.DefaultConfig()
-    //config.AllowOrigins = []string{"http://google.com"}
-    corsConfig.AllowAllOrigins = true
-    corsConfig.AllowHeaders = append(corsConfig.AllowHeaders, "Authorization")
+	// https://github.com/gin-contrib/cors
+	corsConfig := cors.DefaultConfig()
+	//config.AllowOrigins = []string{"http://google.com"}
+	corsConfig.AllowAllOrigins = true
+	corsConfig.AllowHeaders = append(corsConfig.AllowHeaders, "Authorization")
 
-    router.Use(cors.New(corsConfig))
+	router.Use(cors.New(corsConfig))
 
-    router.GET("/", func(c *gin.Context) {
-        time.Sleep(5 * time.Second)
-        c.String(http.StatusOK, "Welcome Gin Server")
-    })
+	router.GET("/", func(c *gin.Context) {
+		time.Sleep(5 * time.Second)
+		c.String(http.StatusOK, "Welcome Gin Server")
+	})
 
-    routes.RegisterRoutes(router, register.Routes())
-    routes.RegisterRoutes(router, login.Routes())
-    routes.RegisterRoutes(router, logout.Routes())
+	routes.RegisterRoutes(router, register.Routes())
+	routes.RegisterRoutes(router, login.Routes())
+	routes.RegisterRoutes(router, logout.Routes())
 
-    protected := router.Group("/")
-    protected.Use(middlewares.Auth())
+	protected := router.Group("/")
+	protected.Use(middlewares.Auth())
 
-    routes.RegisterRoutes(protected, profile.Routes())
+	routes.RegisterRoutes(protected, profile.Routes())
 
-    version.Info{}.Append(router)
-    //_ = version.Print(os.Stdout)
+	version.Info{}.Append(router)
+	//_ = version.Print(os.Stdout)
 
-    port := viper.GetString("server.port")
-    Container.Server = &http.Server{
-        Addr:    ":" + port,
-        Handler: router,
-    }
+	port := viper.GetString("server.port")
+	Container.Server = &http.Server{
+		Addr:    ":" + port,
+		Handler: router,
+	}
 }
