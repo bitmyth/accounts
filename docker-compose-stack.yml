@@ -30,12 +30,6 @@ services:
       MYSQL_DATABASE: ${MYSQL_DB}
     command: --character-set-server=utf8mb4 --default-time-zone=+08:00
 
-  #  db-creation:
-  #    image: mysql:5.7
-  #    command: mysql -uroot -p$MYSQL_PASSWORD -hmysql -e "CREATE SCHEMA $MYSQL_DB DEFAULT CHARACTER SET utf8mb4"
-  #    depends_on:
-  #      - mysql
-
   db-migration:
     image: goose
     depends_on:
@@ -49,7 +43,6 @@ services:
       GOOSE_DBSTRING: root:${MYSQL_PASSWORD}@tcp(mysql)/${MYSQL_DB}
 volumes:
   mysql:
-  #external: true
 
 configs:
   prod_config:
