@@ -16,8 +16,8 @@ services:
       - "8081:80"
     volumes:
       - ./config:/config
-    command: go run src/server/main.go
     restart: always
+    command: go run src/server/main.go
 
   mysql:
     image: mysql:5.7
@@ -27,6 +27,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DB}
+    command: --character-set-server=utf8mb4 --default-time-zone=+08:00
 
 #  db-creation:
 #    image: mysql:5.7
@@ -41,7 +42,7 @@ services:
     working_dir: /migrations
     volumes:
       - ./src/database/migrations:/migrations
-    command: 'goose up'
+    command: goose up
     environment:
       GOOSE_DRIVER: mysql
       GOOSE_DBSTRING: root:${MYSQL_PASSWORD}@tcp(mysql)/${MYSQL_DB}
