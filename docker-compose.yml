@@ -4,11 +4,11 @@ services:
   web:
     image: accounts-frontend:${ACCOUNT_FRONTEND_TAG}
     depends_on:
-      - accounts
+      - api
     ports:
       - "8088:80"
 
-  accounts:
+  api:
     depends_on:
       - mysql
     image: accounts:${ACCOUNT_TAG}
