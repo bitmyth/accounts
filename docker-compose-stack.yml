@@ -19,7 +19,6 @@ services:
         target: /config/dev.yaml
         mode: 0440
     restart: always
-    command: go run src/server/main.go
 
   mysql:
     image: mysql:5.7
