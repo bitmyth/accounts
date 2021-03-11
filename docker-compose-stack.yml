@@ -4,7 +4,7 @@ services:
   web:
     image: ${ACCOUNT_FRONTEND_IMAGE}
     depends_on:
-      - accounts
+      - api
     ports:
       - "8088:80"
 
@@ -16,7 +16,7 @@ services:
       - "8081:80"
     configs:
       - source: prod_config
-        target: /config/dev.yaml
+        target: /config/plain.yaml
         mode: 0440
     restart: always
 
@@ -46,4 +46,4 @@ volumes:
 
 configs:
   prod_config:
-    file: ./config/dev.yaml
+    file: ./config/plain.yaml

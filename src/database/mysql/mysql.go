@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"fmt"
+	"github.com/bitmyth/accounts/src/config"
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -12,7 +13,7 @@ var DB *gorm.DB
 func Dsn() string {
 
 	username := viper.GetString("database.username")
-	password := viper.GetString("database.password")
+	password := config.Secret.GetString("database.password")
 	host := viper.GetString("database.host")
 	port := viper.GetString("database.port")
 	database := viper.GetString("database.schema")
@@ -41,6 +42,7 @@ func Bootstrap() error {
 	}
 
 	dsn := Dsn()
+	println(dsn)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
