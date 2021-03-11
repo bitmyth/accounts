@@ -57,6 +57,8 @@ func Bootstrap() error {
 				i++
 				if err == nil {
 					break
+				} else {
+					println(err.Error())
 				}
 			}
 		}
