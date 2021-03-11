@@ -26,6 +26,7 @@ func Bootstrap() error {
 
 	Secret.SetConfigName("secret")
 	Secret.AddConfigPath(RootPath + "/config")
+	Secret.AddConfigPath("/config")
 	err = Secret.ReadInConfig()
 	if err != nil {
 		return err
