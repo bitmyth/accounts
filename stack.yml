@@ -15,7 +15,7 @@ services:
     ports:
       - "8081:80"
     configs:
-      - source: prod_config
+      - source: plain_config
         target: /config/plain.yaml
         mode: 0440
     secrets:
@@ -49,7 +49,7 @@ volumes:
   mysql:
 
 configs:
-  prod_config:
+  plain_config:
     file: ./config/plain.yaml
 
 secrets:
