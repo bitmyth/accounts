@@ -18,6 +18,10 @@ services:
       - source: prod_config
         target: /config/plain.yaml
         mode: 0440
+    secrets:
+      - source: secret_config
+        target: /config/secret.yaml
+        mode: 0440
     restart: always
 
   mysql:
@@ -47,3 +51,7 @@ volumes:
 configs:
   prod_config:
     file: ./config/plain.yaml
+
+secrets:
+  secret_config:
+    file: ./config/secret.yaml
