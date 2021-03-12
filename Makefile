@@ -22,10 +22,10 @@ binary: dev-image
 image: binary
 	docker build -t $(IMAGE) .
 
-## Run Docker image for development
+## Run Docker development image
 run-dev:
 	docker run --rm --net account-net --name accounts -v $(PWD)/config:/config -p 8081:8081 $(DEV_IMAGE) go run src/server/main.go
-## Run Docker image for development
+## Run Docker production image
 run-prod:
 	docker run --rm --net account-net --name accounts -v $(PWD)/config:/config -p 8081:8081 $(IMAGE)
 
