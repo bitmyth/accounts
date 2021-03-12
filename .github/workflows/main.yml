@@ -44,3 +44,8 @@ jobs:
       # Runs a single command using the runners shell
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+      - name: Set env
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
+      - name: Test
+        run: echo $RELEASE_VERSION
