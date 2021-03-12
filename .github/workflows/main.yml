@@ -38,7 +38,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./
-          file: ./Dockerfile
+          file: ./Dockerfile.multi
           push: true
           tags: bitmyth/accounts:latest
       # Runs a single command using the runners shell
