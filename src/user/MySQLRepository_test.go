@@ -5,6 +5,7 @@ import (
 	"github.com/bitmyth/accounts/src/database/mysql"
 	"github.com/bitmyth/accounts/src/hash"
 	"github.com/bitmyth/accounts/tests/docker"
+	"github.com/spf13/viper"
 	"testing"
 	"time"
 )
@@ -27,6 +28,7 @@ func TestMain(m *testing.M) {
 	println(config.RootPath)
 	_ = config.Bootstrap()
 
+	viper.Set("database.host", "localhost")
 	println(mysql.Dsn())
 
 	_ = cli.RunMigration(mysql.Dsn())
