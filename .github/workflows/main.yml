@@ -37,8 +37,10 @@ jobs:
         id: buildx
         uses: docker/setup-buildx-action@v1
 
-      - uses: olegtarasov/get-tag@v2.1
+      - name: Get latest tag
+        uses: olegtarasov/get-tag@v2.1
         id: tagName
+        run: echo $GIT_TAG_NAME
       #      - name: Set tag env
       #        run: echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
@@ -53,6 +55,3 @@ jobs:
       # Runs a single command using the runners shell
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
-
-      - name: Test
-        run: echo $GIT_TAG_NAME
