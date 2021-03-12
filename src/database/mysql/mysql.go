@@ -42,7 +42,6 @@ func Bootstrap() error {
 	}
 
 	dsn := Dsn()
-	println(dsn)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
