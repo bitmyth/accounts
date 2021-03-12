@@ -15,6 +15,7 @@ func init() {
 }
 
 func Bootstrap() error {
+	viper.AutomaticEnv()
 	viper.SetConfigName("plain")
 	viper.AddConfigPath(RootPath + "/config") // path to look for the config file in
 	viper.AddConfigPath("/config")            // path to look for the config file in
