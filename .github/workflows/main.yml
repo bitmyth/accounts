@@ -56,5 +56,5 @@ jobs:
           push: true
           tags: bitmyth/accounts:${{ steps.tagName.outputs.tag }}
       # Runs a single command using the runners shell
-      - name: Image digest
+      - name: Show Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
