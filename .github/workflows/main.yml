@@ -38,6 +38,7 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - uses: olegtarasov/get-tag@v2.1
+        id: tagName
       #      - name: Set tag env
       #        run: echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
@@ -48,10 +49,10 @@ jobs:
           context: ./
           file: ./Dockerfile.multi
           push: true
-          tags: bitmyth/accounts:$GIT_TAG_NAME
+          tags: bitmyth/accounts:${{ steps.tagName.outputs.tag }}
       # Runs a single command using the runners shell
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
 
       - name: Test
-        run: echo $RELEASE_VERSION
+        run: echo $GIT_TAG_NAME
