@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   web:
-    image: accounts-frontend:${ACCOUNT_FRONTEND_TAG}
+    image: ${ACCOUNT_FRONTEND_IMAGE}
     depends_on:
       - api
     ports:
@@ -11,11 +11,11 @@ services:
   api:
     depends_on:
       - mysql
-    image: accounts:${ACCOUNT_TAG}
+    image: ${ACCOUNT_IMAGE}
     ports:
       - "8081:80"
     volumes:
-      - ./config:/config
+      - .:/go/src/github.com/bitmyth/accounts /
     restart: always
     command: go run src/server/main.go
 
@@ -28,12 +28,6 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DB}
     command: --character-set-server=utf8mb4 --default-time-zone=+08:00
-
-#  db-creation:
-#    image: mysql:5.7
-#    command: mysql -uroot -p$MYSQL_PASSWORD -hmysql -e "CREATE SCHEMA $MYSQL_DB DEFAULT CHARACTER SET utf8mb4"
-#    depends_on:
-#      - mysql
 
   db-migration:
     image: goose

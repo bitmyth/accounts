@@ -24,7 +24,10 @@ image: binary
 
 ## Run Docker development image
 run-dev:
-	docker run --rm --net account-net --name accounts -v $(PWD)/config:/config -p 8081:8081 $(DEV_IMAGE) go run src/server/main.go
+	docker run --rm --net account-net --name accounts -v $(PWD):/go/src/github.com/bitmyth/accounts/ -p 8081:8081 $(DEV_IMAGE) go run src/server/main.go
+dev:
+	export $(cat .env.dev)
+	docker-compose up
 ## Run Docker production image
 run-prod:
 	docker run --rm --net account-net --name accounts -v $(PWD)/config:/config -p 8081:8081 $(IMAGE)

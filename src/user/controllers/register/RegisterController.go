@@ -1,77 +1,62 @@
 package register
 
 import (
-    "github.com/bitmyth/accounts/src/app/auth/token"
-    "github.com/bitmyth/accounts/src/app/responses"
-    "github.com/bitmyth/accounts/src/app/routes"
-    "github.com/bitmyth/accounts/src/hash"
-    "github.com/bitmyth/accounts/src/user"
-    "github.com/gin-gonic/gin"
+	"github.com/bitmyth/accounts/src/app/auth/token"
+	"github.com/bitmyth/accounts/src/app/responses"
+	"github.com/bitmyth/accounts/src/app/routes"
+	"github.com/bitmyth/accounts/src/user"
+	"github.com/gin-gonic/gin"
 )
 
 func Register(context *gin.Context) *responses.Response {
-    //name := context.PostForm("name")
-    //password := context.PostForm("password")
+	//name := context.PostForm("name")
+	//password := context.PostForm("password")
 
-    type RegisterForm struct {
-        user.User
-        PasswordConfirm string `form:"passwordConfirm"`
-    }
-    var req RegisterForm
-    err := context.BindJSON(&req)
-    if err != nil {
-        return responses.Json(err.Error())
-    }
+	type RegisterForm struct {
+		user.User
+		PasswordConfirm string `form:"passwordConfirm"`
+	}
+	var req RegisterForm
+	err := context.BindJSON(&req)
+	if err != nil {
+		return responses.Json(err.Error())
+	}
 
-    userRepo := user.Repo
+	if req.Password != req.PasswordConfirm {
+		return responses.Json(responses.ValidationError{
+			Message: "Wrong password confirmation",
+			Errors:  map[string]string{"passwordConfirm": "wrong password confirmation"},
+		})
+	}
 
-    condition := &user.User{
-        Name: req.Name,
-    }
+	service := NewService(req.User, user.Repo)
 
-    var found user.User
-    err = userRepo.First(&found, condition)
+	registered, err := service.Do()
 
-    // Found existing user with the same name
-    if err == nil {
-        return responses.Json(responses.ValidationError{
-            Code:    "invalid-name",
-            Message: "Invalid name",
-            Errors:  map[string]string{"name": "name exists"},
-        })
-    }
+	if err != nil {
 
-    if req.Password != req.PasswordConfirm {
-        return responses.Json(responses.ValidationError{
-            Message: "Wrong password confirmation",
-            Errors:  map[string]string{"passwordConfirm": "wrong password confirmation"},
-        })
-    }
+		switch err.(type) {
+		case NameExistsError:
+			return responses.Json(responses.ValidationError{
+				Code:    "invalid-name",
+				Message: "Invalid name",
+				Errors:  map[string]string{"name": "name exists"},
+			})
+		case PasswordHashFailedError:
+			return responses.Json("failed hashing password")
+		case SaveError:
+			return responses.Json(err)
+		}
+	}
 
-    hashed, err := hash.Make([]byte(req.User.Password))
-    if err != nil {
-        return responses.Json("failed hashing password")
-    }
+	jwt := token.JWT().GenerateToken(registered.ID, true)
 
-    u := &user.User{
-        Name:     req.Name,
-        Password: string(hashed),
-    }
-
-    err = userRepo.Save(u)
-
-    if err != nil {
-        return responses.Json(err)
-    }
-
-    jwt := token.JWT().GenerateToken(u.ID, true)
-
-    return responses.Json(gin.H{"token": jwt, "user": u.Filter()})
+	return responses.Json(gin.H{"token": jwt, "user": registered.Filter()})
 }
 
 func Routes() []routes.Route {
 
-    return []routes.Route{
-        {"POST", "/v1", "/register", Register},
-    }
+	return []routes.Route{
+		{"POST", "/v1", "/register", Register},
+	}
 }

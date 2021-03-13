@@ -7,6 +7,12 @@ import (
 
 var Repo = NewRepo()
 
+type RepositoryInterface interface {
+	Find(out interface{}, query interface{}, args ...interface{}) error
+	First(out interface{}, query interface{}, args ...interface{}) error
+	Save(value interface{}) error
+}
+
 type Repository struct {
 	DB *gorm.DB
 }
