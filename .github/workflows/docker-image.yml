@@ -23,6 +23,14 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Check-out repo
         uses: actions/checkout@v2
@@ -43,8 +51,8 @@ jobs:
 
       - name: Show tag
         run: echo $GIT_TAG_NAME
-     #- name: Set tag env
-     # run: echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      #- name: Set tag env
+      # run: echo "TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
 
       - name: Build and push
         id: docker_build
@@ -52,8 +60,11 @@ jobs:
         with:
           context: ./
           file: ./Dockerfile.multi
+          builder: ${{ steps.buildx.outputs.name }}
           push: true
           tags: bitmyth/accounts:${{ steps.tagName.outputs.tag }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
 
       # Runs a single command using the runners shell
       - name: Show Image digest
