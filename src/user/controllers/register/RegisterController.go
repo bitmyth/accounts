@@ -38,9 +38,9 @@ func Register(context *gin.Context) *responses.Response {
 		switch err.(type) {
 		case NameExistsError:
 			return responses.Json(responses.ValidationError{
-				Code:    "invalid-name",
-				Message: "Invalid name",
-				Errors:  map[string]string{"name": "name exists"},
+				Code:    err.(NameExistsError).Code,
+				Message: err.(NameExistsError).Message,
+				Errors:  map[string]string{"name": err.Error()},
 			})
 		case PasswordHashFailedError:
 			return responses.Json("failed hashing password")

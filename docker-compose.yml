@@ -15,7 +15,8 @@ services:
     ports:
       - "8081:80"
     volumes:
-      - .:/go/src/github.com/bitmyth/accounts /
+      - .:/go/src/github.com/bitmyth/accounts
+      - ./config:/config
     restart: always
     command: go run src/server/main.go
 

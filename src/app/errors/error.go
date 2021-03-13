@@ -21,5 +21,5 @@ func NewError(code string, err error) Err {
 }
 
 func (e Err) Error() string {
-	return i18n.Translate(e.Code)
+	return e.Message
 }

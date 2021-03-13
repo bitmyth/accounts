@@ -1,7 +1,7 @@
 PWD := $(shell pwd)
 BIND_DIR := dist
 IMAGE := bitmyth/accounts
-DEV_IMAGE := accounts:dev
+DEV_IMAGE := bitmyth/accounts:dev
 
 ## Create the "dist" directory
 dist:
