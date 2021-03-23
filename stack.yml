@@ -29,7 +29,7 @@ services:
     deploy:
       placement:
         constraints:
-          - "engine.labels.role==db"
+          - "node.labels.role==db"
     volumes:
       - mysql:/var/lib/mysql
     restart: always
