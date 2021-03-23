@@ -51,11 +51,6 @@ services:
       GOOSE_DBSTRING: root:${MYSQL_PASSWORD}@tcp(mysql)/${MYSQL_DB}
 volumes:
   mysql:
-    driver: vieux/sshfs
-    driver_opts:
-      sshcmd: store@8.130.27.241:/home/store
-      password: wkkeck
-      allow_other: ""
 
 configs:
   plain_config:
