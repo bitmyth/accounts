@@ -7,6 +7,11 @@ services:
       - api
     ports:
       - "8088:80"
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: web.access
 
   api:
     depends_on:
@@ -22,6 +27,11 @@ services:
       - source: secret_config
         target: /config/secret.yaml
         mode: 0440
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: api
 
   mysql:
     image: mysql:5.7
