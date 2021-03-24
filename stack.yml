@@ -11,7 +11,7 @@ services:
       driver: "fluentd"
       options:
         fluentd-address: localhost:24224
-        tag: web.access
+        tag: web.{{.Name}}
 
   api:
     depends_on:
