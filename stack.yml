@@ -22,7 +22,6 @@ services:
       - source: secret_config
         target: /config/secret.yaml
         mode: 0440
-    restart: always
 
   mysql:
     image: mysql:5.7
@@ -32,7 +31,6 @@ services:
           - "node.labels.role==db"
     volumes:
       - mysql:/var/lib/mysql
-    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DB}
