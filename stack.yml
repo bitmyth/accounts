@@ -75,7 +75,7 @@ services:
       FLUENTD_CONF: 'fluent.conf'
     configs:
       - source: fluentd_config
-        target: /fluentd/etc/fluentd.conf
+        target: /fluentd/etc/fluent.conf
     ports:
       - "24224:24224"
       - "24224:24224/udp"
