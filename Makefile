@@ -35,3 +35,7 @@ run-prod:
 ## Run on local
 run:
 	go run src/server/main.go
+stack:
+	export $(cat .env.dev)
+	docker stack deploy -c stack.yml accounts
+
