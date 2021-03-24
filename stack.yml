@@ -52,6 +52,7 @@ services:
     deploy:
       restart_policy:
         condition: none
+
 volumes:
   mysql:
 
