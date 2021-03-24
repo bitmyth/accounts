@@ -52,6 +52,9 @@ services:
     deploy:
       restart_policy:
         condition: none
+      placement:
+        constraints:
+          - "node.labels.role==db"
 
 volumes:
   mysql:
