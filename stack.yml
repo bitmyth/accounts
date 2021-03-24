@@ -49,6 +49,9 @@ services:
     environment:
       GOOSE_DRIVER: mysql
       GOOSE_DBSTRING: root:${MYSQL_PASSWORD}@tcp(mysql)/${MYSQL_DB}
+    deploy:
+      restart_policy:
+        condition: none
 volumes:
   mysql:
 
