@@ -1,6 +1,11 @@
 Accounts
 
-# Swarm
+# Deploy to Swarm
+
+Add label role=db to node where mysql will runs
+```bash
+docker node update --label-add role=db NODE
+```
 
 ### export env variables
 ```bash
