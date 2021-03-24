@@ -14,6 +14,7 @@ import (
 )
 
 func main() {
+	_ = os.Setenv("TZ", "Asia/Shanghai")
 	err := app.Bootstrap()
 	println(config.RootPath)
 	//gin.SetMode(gin.ReleaseMode)
