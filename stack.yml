@@ -86,8 +86,6 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
     environment:
       - "discovery.type=single-node"
-    expose:
-      - "9200"
     ports:
       - "9200:9200"
     deploy:
