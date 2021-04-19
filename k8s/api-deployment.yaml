@@ -1,0 +1,61 @@
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: api
+  labels:
+    app: api
+spec:
+  selector:
+    matchLabels:
+      app: api
+      tier: backend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: api
+        tier: backend
+    spec:
+      containers:
+        - image: bitmyth/accounts:v1.0.12
+          name: api
+          ports:
+            - containerPort: 80
+              name: api
+          volumeMounts:
+#            - name: secret-config
+#              mountPath: "/config"
+#              readOnly: true
+            - name: plain-config
+              mountPath: "/config"
+              readOnly: true
+      volumes:
+        - name: secret-config
+          secret:
+            secretName: secret-config
+        - name: plain-config
+          configMap:
+            name: plain-config
+
+#---
+#apiVersion: v1
+#kind: Secret
+#metadata:
+#  name: api-config
+#type: Opaque
+#stringData:
+#  plain.yaml: |
+#    server:
+#      port: 80
+#
+#    locale: zn-CN
+#
+#    database:
+#      host: mysql
+#      port: 3306
+#      username: root
+#      schema: accounts
+#  secret.yaml: |
+#    database:
+#      password: 123

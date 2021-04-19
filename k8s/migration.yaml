@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migration
+spec:
+  template:
+    spec:
+      containers:
+        - name: migration
+          image: bitmyth/goose:v1.0.0
+          command: ["goose",  "up"]
+          workingDir: /migrations
+          env:
+            - name: GOOSE_DRIVER
+              value: mysql
+            - name: GOOSE_DBSTRING
+              value: root:123@tcp(mysql)/accounts
+          volumeMounts:
+            - name: migration
+              mountPath: /migrations
+      restartPolicy: Never
+      volumes:
+        - name: migration
+          configMap:
+            name: migration
+  backoffLimit: 4
