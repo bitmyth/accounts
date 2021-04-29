@@ -10,4 +10,4 @@ spec:
   selector:
     app: api
     tier: backend
-  type: LoadBalancer
+  type: NodePort
