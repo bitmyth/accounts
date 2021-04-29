@@ -1,0 +1,30 @@
+configMapGenerator:
+  - name: plain-config
+    files:
+      - config/plain.yaml
+      - config/secret.yaml
+  - name: mysql-config
+    literals:
+      - db=accounts
+secretGenerator:
+  - name: mysql-pass
+    literals:
+      - password=123
+  - name: secret-config
+    files:
+      - config/secret.yaml
+resources:
+  - k8s/mysql-deployment.yaml
+  - k8s/mysql-pv.yaml
+  - k8s/mysql-pvc.yaml
+  - k8s/mysql-service.yaml
+  - k8s/migration.yaml
+  - k8s/api-deployment.yaml
+  - k8s/api-service.yaml
+  - k8s/web-deployment.yaml
+  - k8s/web-service.yaml
+  - k8s/ingress-nginx.yaml
+  - k8s/ingress-nginx-controller.yaml
+#  - k8s/fluentd-daemonset-elasticsearch.yaml
+#  - k8s/elasticsearch.yaml
+#  - k8s/kibana.yaml
