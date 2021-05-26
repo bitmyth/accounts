@@ -34,7 +34,7 @@ spec:
           ports:
             - containerPort: 3306
               name: mysql
-          args: ["--character-set-server=utf8mb4","--default-time-zone=+08:00"]
+          args: ["--character-set-server=utf8mb4","--default-time-zone=+08:00","--ignore-db-dir=lost+found"]
           volumeMounts:
             - name: mysql-persistent-storage
               mountPath: /var/lib/mysql
