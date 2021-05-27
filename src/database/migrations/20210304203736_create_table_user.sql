@@ -4,7 +4,7 @@ CREATE TABLE `users` (
                        `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
                        `name` varchar(100) DEFAULT NULL,
                        `password` varchar(100) DEFAULT NULL,
-                       `email` longtext,
+                       `email` varchar(100),
                        `phone` varchar(191) DEFAULT NULL,
                        `avatar` varchar(100) DEFAULT NULL,
                        `created_at` datetime(3) DEFAULT NULL,
