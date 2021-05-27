@@ -22,7 +22,7 @@ spec:
           name: web
           ports:
             - containerPort: 80
-              name: api
+              name: web
           readinessProbe:
             exec:
               command:

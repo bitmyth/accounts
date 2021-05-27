@@ -22,7 +22,7 @@ spec:
           name: api
           ports:
             - containerPort: 80
-              name: api
+              name: web
           volumeMounts:
 #            - name: secret-config
 #              mountPath: "/config"
