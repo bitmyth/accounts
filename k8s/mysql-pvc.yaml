@@ -5,7 +5,7 @@ metadata:
   labels:
     app: accounts
 spec:
-  storageClassName: manual
+  storageClassName: aws-ebs
   accessModes:
     - ReadWriteOnce
   resources:
