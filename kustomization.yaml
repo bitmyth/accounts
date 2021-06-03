@@ -23,8 +23,9 @@ resources:
   - k8s/api-service.yaml
   - k8s/web-deployment.yaml
   - k8s/web-service.yaml
-  - k8s/ingress-nginx.yaml
-  - k8s/ingress-nginx-controller.yaml
-#  - k8s/fluentd-daemonset-elasticsearch.yaml
-#  - k8s/elasticsearch.yaml
-#  - k8s/kibana.yaml
+  - k8s/ingress.yaml
+  - k8s/ingress-nginx-controller-aws.yaml
+  - k8s/elasticsearch.yaml
+  - k8s/fluentd-daemonset-elasticsearch.yaml
+  - k8s/fluentd-rbac.yaml
+  - k8s/kibana.yaml
