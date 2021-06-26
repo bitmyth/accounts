@@ -10,6 +10,7 @@ spec:
   tls:
     - hosts:
         - unit.ink
+        - '*.unit.ink'
       secretName: unit-tls
   defaultBackend:
     service:
@@ -37,3 +38,13 @@ spec:
                 name: api
                 port:
                   number: 80
+    - host: kibana.app.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kibana
+                port:
+                  number: 5601
