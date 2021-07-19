@@ -1,0 +1,30 @@
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: web
+  labels:
+    {{- include "web.labels" . | nindent 4}}
+spec:
+  selector:
+    matchLabels:
+      {{- include "web.selectorLabels" . |nindent 6}}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        {{- include "web.selectorLabels" . |nindent 8}}
+    spec:
+      containers:
+        - image: "{{ .Values.web.image.repository }}:{{ .Values.web.image.tag | default .Chart.AppVersion }}"
+          name: web
+          ports:
+            - containerPort: 80
+              name: web
+          readinessProbe:
+            exec:
+              command:
+                - curl
+                - api
+            initialDelaySeconds: 5
+            periodSeconds: 30

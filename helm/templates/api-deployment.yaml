@@ -1,0 +1,31 @@
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: api
+  labels:
+    {{- include "api.labels" . | nindent 4}}
+spec:
+  selector:
+    matchLabels:
+      {{- include "api.selectorLabels" . |nindent 6}}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        {{- include "api.selectorLabels" . |nindent 8}}
+    spec:
+      containers:
+        - image: "{{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default .Chart.AppVersion }}"
+          name: api
+          ports:
+            - containerPort: 80
+              name: web
+          volumeMounts:
+            - name: secret-config
+              mountPath: "/config"
+              readOnly: true
+      volumes:
+        - name: secret-config
+          secret:
+            secretName: api-secret

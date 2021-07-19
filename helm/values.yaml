@@ -1,0 +1,78 @@
+nameOverride: "account"
+fullnameOverride: ""
+
+mysql:
+  image:
+    repository: mysql
+    pullPolicy: IfNotPresent
+    tag: "5.7"
+  auth:
+    host: mysql
+    port: 3306
+    username: root
+    password: 123
+    database: accounts
+
+web:
+  port: 80
+  image:
+    repository: bitmyth/accounts-frontend
+    pullPolicy: IfNotPresent
+    tag: "v1.0.54"
+
+api:
+  server:
+    port: 80
+  locale: zn-CN
+  image:
+    repository: bitmyth/accounts
+    pullPolicy: IfNotPresent
+    tag: "v1.0.12"
+
+ingress:
+  enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/issuer: "letsencrypt-prod"
+  hosts:
+    - host: unit.ink
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web
+                port:
+                  number: 80
+    - host: api.unit.ink
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: api
+                port:
+                  number: 80
+    - host: kibana.unit.ink
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kibana
+                port:
+                  number: 5601
+#  tls:
+#    - secretName: unit-tls
+#      hosts:
+#        - unit.ink
+#        - "*.unit.ink"
+
+storage:
+  class: aws-ebs
+  size: 20Gi
+
