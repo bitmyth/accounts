@@ -16,6 +16,7 @@ func Dsn() string {
 	password := config.Secret.GetString("database.password")
 	host := config.Secret.GetString("database.host")
 	port := config.Secret.GetString("database.port")
+	println(port)
 	database := config.Secret.GetString("database.schema")
 
 	if h := viper.GetString("MYSQL_USERNAME"); h != "" {
