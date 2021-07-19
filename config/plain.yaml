@@ -2,10 +2,3 @@ server:
   port: 80
 
 locale: zn-CN
-
-database:
-  host: mysql
-  port: 3306
-  username: root
-  password: 123
-  schema: accounts

@@ -12,13 +12,30 @@ var DB *gorm.DB
 
 func Dsn() string {
 
-	username := viper.GetString("database.username")
+	username := config.Secret.GetString("database.username")
 	password := config.Secret.GetString("database.password")
-	host := viper.GetString("database.host")
-	port := viper.GetString("database.port")
-	database := viper.GetString("database.schema")
+	host := config.Secret.GetString("database.host")
+	port := config.Secret.GetString("database.port")
+	database := config.Secret.GetString("database.schema")
+
+	if h := viper.GetString("MYSQL_USERNAME"); h != "" {
+		username = h
+	}
+	if h := viper.GetString("MYSQL_PASSWORD"); h != "" {
+		password = h
+	}
+	if h := viper.GetString("MYSQL_HOST"); h != "" {
+		host = h
+	}
+	if h := viper.GetString("MYSQL_PORT"); h != "" {
+		port = h
+	}
+	if h := viper.GetString("MYSQL_DB"); h != "" {
+		database = h
+	}
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", username, password, host, port, database)
+	println(dsn)
 
 	return dsn
 }
