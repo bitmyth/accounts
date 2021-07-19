@@ -16,27 +16,24 @@ func Dsn() string {
 	password := config.Secret.GetString("database.password")
 	host := config.Secret.GetString("database.host")
 	port := config.Secret.GetString("database.port")
-	println(port)
 	database := config.Secret.GetString("database.schema")
 
-	if h := viper.GetString("MYSQL_USERNAME"); h != "" {
+	if h := viper.GetString("DATABASE_USERNAME"); h != "" {
 		username = h
 	}
-	if h := viper.GetString("MYSQL_PASSWORD"); h != "" {
+	if h := viper.GetString("DATABASE_PASSWORD"); h != "" {
 		password = h
 	}
-	if h := viper.GetString("MYSQL_HOST"); h != "" {
+	if h := viper.GetString("DATABASE_HOST"); h != "" {
 		host = h
 	}
-	if h := viper.GetString("MYSQL_PORT"); h != "" {
+	if h := viper.GetString("DATABASE_PORT"); h != "" {
 		port = h
 	}
-	if h := viper.GetString("MYSQL_DB"); h != "" {
+	if h := viper.GetString("DATABASE_DB"); h != "" {
 		database = h
 	}
 
-	println(host)
-	println(port)
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", username, password, host, port, database)
 	println(dsn)
 
