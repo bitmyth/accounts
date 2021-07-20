@@ -18,16 +18,16 @@ web:
   image:
     repository: bitmyth/accounts-frontend
     pullPolicy: IfNotPresent
-    tag: "v1.0.54"
+    tag: "v1.1.1"
 
 api:
   server:
     port: 80
-  locale: zn-CN
+  locale: zh-CN
   image:
     repository: bitmyth/accounts
     pullPolicy: IfNotPresent
-    tag: "v1.0.12"
+    tag: "v1.1.5"
 
 ingress:
   enabled: true
