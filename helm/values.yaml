@@ -18,7 +18,7 @@ web:
   image:
     repository: bitmyth/accounts-frontend
     pullPolicy: IfNotPresent
-    tag: "v1.1.1"
+    tag: "v1.1.2"
 
 api:
   server:
@@ -27,7 +27,7 @@ api:
   image:
     repository: bitmyth/accounts
     pullPolicy: IfNotPresent
-    tag: "v1.1.5"
+    tag: "v1.1.7"
 
 ingress:
   enabled: true
@@ -66,11 +66,11 @@ ingress:
                 name: kibana
                 port:
                   number: 5601
-#  tls:
-#    - secretName: unit-tls
-#      hosts:
-#        - unit.ink
-#        - "*.unit.ink"
+  tls:
+    - secretName: unit-tls
+      hosts:
+        - unit.ink
+        - "*.unit.ink"
 
 storage:
   class: aws-ebs
