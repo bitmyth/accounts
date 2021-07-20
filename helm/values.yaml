@@ -11,7 +11,7 @@ mysql:
     port: 3306
     username: root
     password: 123
-    database: accounts
+    schema: accounts
 
 web:
   port: 80
