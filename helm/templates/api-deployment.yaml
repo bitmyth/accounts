@@ -19,7 +19,7 @@ spec:
         - image: "{{ .Values.api.image.repository }}:{{ .Values.api.image.tag | default .Chart.AppVersion }}"
           name: api
           ports:
-            - containerPort: 80
+            - containerPort: {{ required "A valid .Values.api.server.port required" .Values.api.server.port }}
               name: web
           volumeMounts:
             - name: secret-config

@@ -9,4 +9,3 @@ spec:
     - port: {{ required "A valid .Values.mysql.auth.port required" .Values.mysql.auth.port }}
   selector:
     {{- include "mysql.selectorLabels" . |nindent 6}}
-#  clusterIP: None

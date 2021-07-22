@@ -75,4 +75,3 @@ ingress:
 storage:
   class: aws-ebs
   size: 20Gi
-

@@ -7,11 +7,10 @@ tier: frontend
 {{- end }}
 
 {{/*
-Common labels
+Web labels
 */}}
 {{- define "web.labels" -}}
-helm.sh/chart: {{ include "api.chart" . }}
 {{ include "web.selectorLabels" . }}
-{{- include "common.labels" . }}
+{{ include "common.labels" . }}
 {{- end }}
 

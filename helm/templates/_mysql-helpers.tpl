@@ -7,10 +7,9 @@ tier: mysql
 {{- end }}
 
 {{/*
-Common labels
+Mysql labels
 */}}
 {{- define "mysql.labels" -}}
-helm.sh/chart: {{ include "api.chart" . }}
 {{ include "mysql.selectorLabels" . }}
-{{- include "common.labels" . }}
+{{ include "common.labels" . }}
 {{- end }}
