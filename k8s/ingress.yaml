@@ -28,7 +28,7 @@ spec:
                 name: web
                 port:
                   number: 80
-    - host: unit.ink
+    - host: api.unit.ink
       http:
         paths:
           - path: /
@@ -38,7 +38,7 @@ spec:
                 name: api
                 port:
                   number: 80
-    - host: kibana.app.com
+    - host: kibana.unit.ink
       http:
         paths:
           - path: /

@@ -24,16 +24,10 @@ spec:
             - containerPort: 80
               name: web
           volumeMounts:
-            - name: api-secret
-              mountPath: "/config"
-              readOnly: true
             - name: plain-config
               mountPath: "/config"
               readOnly: true
       volumes:
-        - name: secret-config
-          secret:
-            secretName: secret-config
         - name: plain-config
           configMap:
             name: plain-config
