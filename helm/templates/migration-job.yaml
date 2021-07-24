@@ -19,6 +19,10 @@ spec:
             - name: migration
               mountPath: /migrations
       restartPolicy: Never
+      initContainers:
+        - name: wait-db
+            image: busybox:1.28
+            command: ['sh', '-c', "until nslookup mysql; do echo waiting for mysql; sleep 1; done"]
       volumes:
         - name: migration
           configMap:

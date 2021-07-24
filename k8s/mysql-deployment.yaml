@@ -29,7 +29,7 @@ spec:
             - name: MYSQL_DATABASE
               valueFrom:
                 configMapKeyRef:
-                  name: secret-config
+                  name: mysql-config
                   key: db
           ports:
             - containerPort: 3306
