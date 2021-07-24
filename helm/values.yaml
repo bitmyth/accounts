@@ -70,7 +70,7 @@ ingress:
     - secretName: unit-tls
       hosts:
         - unit.ink
-        - "*.unit.ink"
+        - api.unit.ink
 
 storage:
   class: aws-ebs

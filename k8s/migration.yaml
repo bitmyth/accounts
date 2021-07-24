@@ -22,7 +22,7 @@ spec:
       initContainers:
         - name: wait-db
           image: busybox:1.28
-          command: ['sh', '-c', "until nslookup mysql; do echo waiting for mysql; sleep 1; done"]
+          command: ['sh', '-c', "until telnet mysql 3306; do echo waiting for mysql; sleep 1; done"]
       volumes:
         - name: migration
           configMap:
