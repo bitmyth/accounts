@@ -17,6 +17,7 @@ func Auth() gin.HandlerFunc {
 
         if err != nil {
             c.AbortWithStatusJSON(http.StatusUnauthorized, responses.AuthError{Code: "unauthorized", Message: err.Error()})
+            return
         }
 
         claims := t.Claims.(*token.AuthCustomClaims)
