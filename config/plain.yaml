@@ -1,4 +1,4 @@
 server:
   port: 80
 
-locale: zn-CN
+locale: zh-CN
