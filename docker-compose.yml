@@ -28,6 +28,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DB}
+      TZ: Asia/Shanghai
     command: --character-set-server=utf8mb4 --default-time-zone=+08:00
 
   db-migration:

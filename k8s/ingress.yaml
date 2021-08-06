@@ -10,7 +10,7 @@ spec:
   tls:
     - hosts:
         - unit.ink
-        - '*.unit.ink'
+        - api.unit.ink
       secretName: unit-tls
   defaultBackend:
     service:

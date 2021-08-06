@@ -71,7 +71,6 @@ func RegisterRoutes() {
 
 	router := gin.Default()
 
-	// https://github.com/gin-contrib/cors
 	corsConfig := cors.DefaultConfig()
 	//config.AllowOrigins = []string{"http://google.com"}
 	corsConfig.AllowAllOrigins = true
@@ -80,7 +79,6 @@ func RegisterRoutes() {
 	router.Use(cors.New(corsConfig))
 
 	router.GET("/", func(c *gin.Context) {
-		time.Sleep(5 * time.Second)
 		c.String(http.StatusOK, "Welcome Gin Server")
 	})
 
