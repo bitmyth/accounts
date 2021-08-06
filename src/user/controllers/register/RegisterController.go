@@ -49,7 +49,7 @@ func Register(context *gin.Context) *responses.Response {
 		}
 	}
 
-	jwt := token.JWT().GenerateToken(registered.ID, true)
+	jwt := token.Jwt.GenerateToken(registered.ID, []string{})
 
 	return responses.Json(gin.H{"token": jwt, "user": registered.Filter()})
 }

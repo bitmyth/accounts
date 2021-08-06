@@ -39,7 +39,7 @@ func Login(context *gin.Context) *responses.Response {
         return responses.Json("wrong password")
     }
 
-    jwt := token.JWT().GenerateToken(u.ID, true)
+    jwt := token.Jwt.GenerateToken(u.ID, []string{})
     return responses.Json(gin.H{"token": jwt, "user": u})
 }
 
