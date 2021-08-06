@@ -40,7 +40,7 @@ func Login(context *gin.Context) *responses.Response {
     }
 
     jwt := token.Jwt.GenerateToken(u.ID, []string{})
-    return responses.Json(gin.H{"token": jwt, "user": u})
+    return responses.Json(gin.H{"token": jwt, "user": found})
 }
 
 func Routes() []routes.Route {

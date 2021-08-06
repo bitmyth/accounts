@@ -2,11 +2,11 @@
 package token
 
 import (
-"crypto/rsa"
-"errors"
-"github.com/bitmyth/accounts/src/config"
-"github.com/dgrijalva/jwt-go"
-"time"
+    "crypto/rsa"
+    "errors"
+    "github.com/bitmyth/accounts/src/config"
+    "github.com/dgrijalva/jwt-go"
+    "time"
 )
 
 var Jwt JWTService
@@ -37,9 +37,9 @@ func NewJwt(pubKeyData []byte, priKeyData []byte) JWTService {
 }
 
 func Bootstrap() error {
-    pubKeyData := config.Secret.GetString("rsa.publickey")
+    priKeyData := config.Secret.GetString("rsa.privateKey")
 
-    Jwt = NewJwt([]byte(pubKeyData), []byte{})
+    Jwt = NewJwt([]byte{}, []byte(priKeyData))
     return nil
 }
 
