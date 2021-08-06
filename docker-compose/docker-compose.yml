@@ -15,8 +15,8 @@ services:
     ports:
       - "8081:80"
     volumes:
-      - .:/go/src/github.com/bitmyth/accounts
-      - ./config:/config
+      - ..:/go/src/github.com/bitmyth/accounts
+      - ../config:/go/src/github.com/bitmyth/accounts/config
     restart: always
     command: go run src/server/main.go
 
@@ -37,7 +37,7 @@ services:
       - mysql
     working_dir: /migrations
     volumes:
-      - ./src/database/migrations:/migrations
+      - ../src/database/migrations:/migrations
     command: goose up
     environment:
       GOOSE_DRIVER: mysql
