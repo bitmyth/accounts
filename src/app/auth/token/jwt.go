@@ -2,94 +2,96 @@
 package token
 
 import (
-	"fmt"
-	"github.com/dgrijalva/jwt-go"
-	"gopkg.in/errgo.v2/errors"
-	"os"
-	"time"
+"crypto/rsa"
+"errors"
+"github.com/bitmyth/accounts/src/config"
+"github.com/dgrijalva/jwt-go"
+"time"
 )
 
-var s JWTService
+var Jwt JWTService
 
-func JWT() JWTService {
-	if s != nil {
-		return s
-	}
-	s = NewJwtService()
-	return s
+type JWTService interface {
+    GenerateToken(uid uint, roles []string) string
+    ValidateToken(token string) (*jwt.Token, error)
+    ValidateHeader(token string) (*jwt.Token, error)
 }
 
-//token service
-type JWTService interface {
-	GenerateToken(uid uint, isUser bool) string
-	ValidateToken(token string) (*jwt.Token, error)
-	ValidateHeader(token string) (*jwt.Token, error)
+func NewJwt(pubKeyData []byte, priKeyData []byte) JWTService {
+    pubKey, _ := jwt.ParseRSAPublicKeyFromPEM(pubKeyData)
+    j := &jwtService{
+        issuer: "Bitmyth",
+    }
+
+    if len(pubKeyData) > 0 {
+        j.rsaPublicKey = pubKey
+    }
+
+    // For testing
+    if len(priKeyData) > 0 {
+        priKey, _ := jwt.ParseRSAPrivateKeyFromPEM(priKeyData)
+        j.rsaPrivateKey = priKey
+    }
+
+    return j
+}
+
+func Bootstrap() error {
+    pubKeyData := config.Secret.GetString("rsa.publickey")
+
+    Jwt = NewJwt([]byte(pubKeyData), []byte{})
+    return nil
 }
 
 type AuthCustomClaims struct {
-	Uid  uint `json:"uid"`
-	User bool `json:"user"`
-	jwt.StandardClaims
+    Uid   uint     `json:"uid"`
+    Roles []string `json:"roles"`
+    jwt.StandardClaims
 }
 
 type jwtService struct {
-	secretKey string
-	issuer    string
+    secretKey     string
+    issuer        string
+    rsaPrivateKey *rsa.PrivateKey
+    rsaPublicKey  *rsa.PublicKey
 }
 
-//auth-token
-func NewJwtService() JWTService {
-	return &jwtService{
-		secretKey: getSecretKey(),
-		issuer:    "Bikash",
-	}
+func (service *jwtService) GenerateToken(uid uint, roles []string) string {
+    claims := &AuthCustomClaims{
+        uid,
+        roles,
+        jwt.StandardClaims{
+            ExpiresAt: time.Now().Add(time.Hour * 48).Unix(),
+            Issuer:    service.issuer,
+            IssuedAt:  time.Now().Unix(),
+        },
+    }
+
+    token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
+    t, err := token.SignedString(service.rsaPrivateKey)
+
+    if err != nil {
+        panic(err)
+    }
+    return t
 }
 
-func getSecretKey() string {
-	secret := os.Getenv("SECRET")
-	if secret == "" {
-		secret = "secret"
-	}
-	return secret
-}
+const BEARER_SCHEMA = "Bearer "
 
-func (service *jwtService) GenerateToken(uid uint, isUser bool) string {
-	claims := &AuthCustomClaims{
-		uid,
-		isUser,
-		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(time.Hour * 48).Unix(),
-			Issuer:    service.issuer,
-			IssuedAt:  time.Now().Unix(),
-		},
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+func (service *jwtService) ValidateHeader(authHeader string) (*jwt.Token, error) {
+    if len(authHeader) < len(BEARER_SCHEMA) {
+        return nil, errors.New("token invalid")
+    }
 
-	//encoded string
-	t, err := token.SignedString([]byte(service.secretKey))
-	if err != nil {
-		panic(err)
-	}
-	return t
+    tokenString := authHeader[len(BEARER_SCHEMA):]
+
+    return service.ValidateToken(tokenString)
 }
 
 func (service *jwtService) ValidateToken(encodedToken string) (*jwt.Token, error) {
-	return jwt.ParseWithClaims(encodedToken, &AuthCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
-		if _, isValid := token.Method.(*jwt.SigningMethodHMAC); !isValid {
-			return nil, fmt.Errorf("invalid token: %s", token.Header["alg"])
 
-		}
-		return []byte(service.secretKey), nil
-	})
+    return jwt.ParseWithClaims(encodedToken, &AuthCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+        return service.rsaPublicKey, nil
+    })
 
-}
-
-func (service *jwtService) ValidateHeader(authHeader string) (*jwt.Token, error) {
-	const BEARER_SCHEMA = "Bearer "
-	if len(authHeader) < len(BEARER_SCHEMA) {
-		return nil, errors.New("token invalid")
-	}
-
-	tokenString := authHeader[len(BEARER_SCHEMA):]
-	return service.ValidateToken(tokenString)
 }

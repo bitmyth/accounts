@@ -13,7 +13,7 @@ func Auth() gin.HandlerFunc {
     return func(c *gin.Context) {
         authHeader := c.GetHeader("Authorization")
 
-        t, err := token.JWT().ValidateHeader(authHeader)
+        t, err := token.Jwt.ValidateHeader(authHeader)
 
         if err != nil {
             c.AbortWithStatusJSON(http.StatusUnauthorized, responses.AuthError{Code: "unauthorized", Message: err.Error()})
