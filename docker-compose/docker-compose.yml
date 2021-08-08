@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  web:
+    image: ${ACCOUNT_FRONTEND_IMAGE}
+    depends_on:
+      - api
+    ports:
+      - "8088:80"
+
+  api:
+    depends_on:
+      - mysql
+    image: ${ACCOUNT_IMAGE}
+    ports:
+      - "8081:80"
+    volumes:
+      - ..:/go/src/github.com/bitmyth/accounts
+      - ../config:/go/src/github.com/bitmyth/accounts/config
+    restart: always
+    command: go run src/server/main.go
+
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - mysql:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB}
+      TZ: Asia/Shanghai
+    command: --character-set-server=utf8mb4 --default-time-zone=+08:00
+
+  db-migration:
+    image: goose
+    depends_on:
+      - mysql
+    working_dir: /migrations
+    volumes:
+      - ../src/database/migrations:/migrations
+    command: goose up
+    environment:
+      GOOSE_DRIVER: mysql
+      GOOSE_DBSTRING: root:${MYSQL_PASSWORD}@tcp(mysql)/${MYSQL_DB}
+volumes:
+  mysql:
+  #external: true

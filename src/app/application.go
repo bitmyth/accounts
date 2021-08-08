@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/bitmyth/accounts/src/app/auth/token"
 	"github.com/bitmyth/accounts/src/app/boot"
 	"github.com/bitmyth/accounts/src/app/middlewares"
 	"github.com/bitmyth/accounts/src/app/routes"
@@ -38,7 +39,8 @@ func New() *App {
 		config.Bootstrap,
 		mysql.Bootstrap,
 		user.Repo.Bootstrap,
-	}
+		token.Bootstrap,
+    }
 
 	return Container
 }
