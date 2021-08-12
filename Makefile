@@ -32,10 +32,8 @@ dev:
 run-prod:
 	docker run --rm --net account-net --name accounts -v $(PWD)/config:/config -p 8081:8081 $(IMAGE)
 
-## Run on local
 run:
 	go run src/server/main.go
 stack:
 	export $(cat .env.dev)
 	docker stack deploy -c stack.yml accounts
-
