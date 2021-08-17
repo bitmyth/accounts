@@ -18,7 +18,7 @@ spec:
         tier: frontend
     spec:
       containers:
-        - image: bitmyth/accounts-frontend:v1.0.54
+        - image: bitmyth/accounts-frontend:v1.1.2
           name: web
           ports:
             - containerPort: 80
